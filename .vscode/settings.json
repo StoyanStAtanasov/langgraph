@@ -1,3 +1,29 @@
 {
-    "python.analysis.typeCheckingMode": "standard"
+    "python.analysis.typeCheckingMode": "standard",
+    "pgsql.serverGroups": [
+        {
+            "name": "Servers",
+            "id": "B0E788EF-BF38-4BF9-A7B0-0BFA3645E376",
+            "isDefault": true
+        }
+    ],
+    "pgsql.connections": [
+        {
+            "id": "AC0A3FDF-B902-40DB-8D61-5436F459B331",
+            "groupId": "B0E788EF-BF38-4BF9-A7B0-0BFA3645E376",
+            "authenticationType": "SqlLogin",
+            "connectTimeout": 15,
+            "applicationName": "vscode-pgsql",
+            "clientEncoding": "utf8",
+            "sslmode": "prefer",
+            "savePassword": true,
+            "server": "localhost",
+            "user": "postgres",
+            "password": "postgres",
+            "database": "postgres",
+            "profileName": "postgres",
+            "sshPassword": "",
+            "expiresOn": 0
+        }
+    ],
 }

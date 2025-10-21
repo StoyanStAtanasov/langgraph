@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import selectors
 from typing import Any, TypedDict
 from uuid import UUID, uuid4
 from langchain.agents import create_agent, AgentState
@@ -15,8 +14,9 @@ from langchain.agents.middleware.types import (
 from langchain.tools import tool, ToolRuntime
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
+from psycopg_pool import AsyncConnectionPool
 import uvicorn
 from starlette.responses import StreamingResponse
 
@@ -131,25 +131,34 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+# Create a connection pool
+pool = AsyncConnectionPool(
+    conninfo="postgresql://postgres:postgres@localhost/postgres")
+
+# Create the saver context manager
+
+
+def get_saver():
+    return AsyncPostgresSaver.from_conn_string(
+        "postgresql://postgres:postgres@localhost/postgres"
+    )
+
 
 @app.get("/")
 async def root(input: str = "Hello World", session_id: UUID | None = None):
 
-    async with postgresCheckpointer:
+    async with postgresCheckpointer as postgresCheckpointerInstance:
 
         if session_id is None:
             session_id = uuid4()
 
-        agent = await create_configurable_agent(agentConfig, postgresCheckpointer)
+        agent = await create_configurable_agent(agentConfig, postgresCheckpointerInstance)
 
-        async def stream():
-            async for chunk in run_agent_streaming_response(
-                agent, session_id, input, context=agentConfig["context"]
-            ):
-                # Ensure we yield strings (StreamingResponse accepts str or bytes)
-                yield chunk
+        async def event_generator():
+            async for chunk in run_agent_streaming_response(agent, session_id, input, context=agentConfig["context"]):
+                yield f"data: {chunk}\n\n"
 
-        return StreamingResponse(stream(), media_type="text/plain")
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 if __name__ == "__main__":

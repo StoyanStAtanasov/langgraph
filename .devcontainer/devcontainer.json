@@ -17,7 +17,8 @@
 		"vscode": {
 			"extensions": [
 				"ms-python.python",
-				"ms-ossdata.vscode-postgres"
+				"ms-ossdata.vscode-postgres",
+				"ms-ossdata.vscode-pgsql"
 			]
 		}
 	},
