@@ -21,15 +21,6 @@ import uvicorn
 from starlette.responses import StreamingResponse
 
 
-import asyncio
-import platform
-
-# to fix asyncio event loop issue on Windows for psycopg
-
-if platform.system() == "Windows":
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
-
 load_dotenv()
 
 
