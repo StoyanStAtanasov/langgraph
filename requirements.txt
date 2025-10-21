@@ -1,0 +1,11 @@
+FastAPI
+LangGraph
+uvicorn
+jinja2
+httpx
+python-dotenv
+
+
+langchain
+langchain-openai
+python-dotenv

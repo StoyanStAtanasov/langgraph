@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - ENV_FILE=.env
+    depends_on:
+      - langgraph
+
+  langgraph:
+    image: langgraph/agent:latest
+    volumes:
+      - langgraph_data:/data
+
+volumes:
+  langgraph_data:
