@@ -11,5 +11,6 @@ langchain-openai
 python-dotenv
 langgraph-checkpoint-postgres
 psycopg[binary]
+psycopg2-binary
 asyncpg
 sqlalchemy
